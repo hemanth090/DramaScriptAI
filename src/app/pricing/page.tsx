@@ -54,6 +54,10 @@ const proPlan = {
   description: "For creators who ship consistently",
   features: [
     "50 scripts per month",
+    "4 to 12 episode arcs",
+    "Copy to clipboard & PDF export",
+    "8 genre categories",
+    "Script history dashboard",
     "Priority generation speed",
     "Cancel anytime",
   ],
