@@ -1,17 +1,32 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import Image from "next/image";
 import { LogOut, User, LayoutDashboard } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export default function AuthButton() {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -23,77 +38,70 @@ export default function AuthButton() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (status === "loading") {
-    return <div className="h-8 w-16 animate-pulse rounded-md bg-muted" />;
-  }
+  if (loading) return null;
 
-  if (!session) {
+  if (!user) {
     return (
       <Link href="/login">
-        <Button size="sm">Sign In</Button>
+        <Button variant="default" size="sm">Sign In</Button>
       </Link>
     );
   }
 
-  const initials = session.user.name
-    ? session.user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
-    : session.user.email?.[0]?.toUpperCase() || "U";
+  const name = user.user_metadata?.name || user.email?.split("@")[0] || "User";
+  const initials = name
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  }
 
   return (
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className={cn(
-          "flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-colors",
-          "bg-muted text-foreground hover:bg-secondary"
-        )}
-        aria-label="User menu"
-        aria-expanded={open}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-background text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
       >
-        {session.user.image ? (
-          <Image src={session.user.image} alt="Avatar" width={32} height={32} className="h-8 w-8 rounded-full" />
-        ) : (
-          initials
-        )}
+        {initials}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-52 rounded-lg border border-border bg-card shadow-xl z-50">
-          <div className="px-3 py-2.5 border-b border-border">
-            <p className="text-sm font-medium truncate">{session.user.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
-            {session.user.isPro && (
-              <span className="mt-1 inline-flex items-center rounded-full bg-accent/10 border border-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent">
-                PRO
-              </span>
+        <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card shadow-lg py-1 z-50">
+          <div className="px-4 py-2.5 border-b border-border">
+            <p className="text-sm font-medium truncate">{name}</p>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          </div>
+          <Link
+            href="/dashboard"
+            onClick={() => setOpen(false)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             )}
-          </div>
-
-          <div className="p-1">
-            <Link
-              href="/dashboard"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <LayoutDashboard className="h-3.5 w-3.5" />
-              Dashboard
-            </Link>
-            <Link
-              href="/generate"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <User className="h-3.5 w-3.5" />
-              Generate
-            </Link>
-            <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Sign Out
-            </button>
-          </div>
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </Link>
+          <Link
+            href="/generate"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <User className="h-4 w-4" />
+            Generate
+          </Link>
+          <button
+            onClick={handleSignOut}
+            className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </button>
         </div>
       )}
     </div>

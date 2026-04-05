@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -49,7 +49,7 @@ const categories = [
 function GenerateContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  useAuth(); // ensures auth state is tracked
   const initialPrompt = searchParams.get("prompt") || "";
 
   const [prompt, setPrompt] = useState(initialPrompt);
@@ -60,7 +60,7 @@ function GenerateContent() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const [limit, setLimit] = useState<number>(3);
-  const [isPro, setIsPro] = useState(session?.user?.isPro ?? false);
+  const [isPro, setIsPro] = useState(false);
   const [generationId, setGenerationId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [episodes, setEpisodes] = useState(8);

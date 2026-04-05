@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
-import SessionProvider from "@/components/SessionProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,11 +20,11 @@ const siteUrl = process.env.SITE_URL || "https://dramascript.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "DramaScript.ai — AI Short Drama Script Generator",
+    default: "DramaScript.ai - AI Short Drama Script Generator",
     template: "%s | DramaScript.ai",
   },
   description:
-    "Generate viral short drama scripts for Reels, TikTok & YouTube Shorts. 8-episode arcs with cliffhangers, emotional hooks, and zero-budget filming guides — powered by AI.",
+    "Generate viral short drama scripts for Reels, TikTok & YouTube Shorts. 8-episode arcs with cliffhangers, emotional hooks, and zero-budget filming guides.",
   keywords: [
     "drama script generator",
     "AI script writer",
@@ -37,9 +36,9 @@ export const metadata: Metadata = {
     "vertical video script",
   ],
   openGraph: {
-    title: "DramaScript.ai — AI Short Drama Script Generator",
+    title: "DramaScript.ai - AI Short Drama Script Generator",
     description:
-      "Generate complete 8-episode drama scripts with cliffhangers, emotional arcs & zero-budget filming guides. Perfect for Reels, TikTok & YouTube Shorts.",
+      "Generate complete 8-episode drama scripts with cliffhangers, emotional arcs & zero-budget filming guides.",
     url: siteUrl,
     siteName: "DramaScript.ai",
     locale: "en_US",
@@ -47,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "DramaScript.ai — AI Short Drama Script Generator",
+    title: "DramaScript.ai - AI Short Drama Script Generator",
     description:
       "Generate viral drama scripts for Reels, TikTok & YouTube Shorts in seconds.",
   },
@@ -68,12 +67,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SessionProvider>
-          <Navbar />
-          <main className="flex-1 pt-16">{children}</main>
-          <Footer />
-          <Toaster />
-        </SessionProvider>
+        <Navbar />
+        <main className="flex-1 pt-16">{children}</main>
+        <Footer />
+        <Toaster />
       </body>
     </html>
   );

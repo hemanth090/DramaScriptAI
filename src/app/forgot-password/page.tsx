@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Clapperboard, Loader2, Mail, ArrowLeft } from "lucide-react";
+import { Clapperboard, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -16,49 +17,32 @@ export default function ForgotPasswordPage() {
     setError("");
     setLoading(true);
 
-    try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.toLowerCase().trim() }),
-      });
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(
+      email.toLowerCase().trim(),
+      { redirectTo: `${window.location.origin}/reset-password` }
+    );
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Something went wrong.");
-        setLoading(false);
-        return;
-      }
-
-      setSent(true);
-    } catch {
-      setError("Network error. Please try again.");
-    } finally {
+    if (authError) {
+      setError(authError.message);
       setLoading(false);
+      return;
     }
+
+    setSent(true);
+    setLoading(false);
   }
 
   if (sent) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
         <div className="w-full max-w-md text-center space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-            <Mail className="h-8 w-8 text-accent" />
-          </div>
+          <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="text-muted-foreground">
-            If an account exists with <strong>{email}</strong>, we sent a password reset link. It expires in 1 hour.
+            If an account exists for <strong className="text-foreground">{email}</strong>, we sent a password reset link.
           </p>
-          <p className="text-xs text-muted-foreground">
-            Didn&apos;t receive it? Check your spam folder.
-          </p>
-          <Link href="/login">
-            <Button variant="outline" className="mt-4">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Sign In
-            </Button>
-          </Link>
+          <Link href="/login"><Button variant="outline">Back to Sign In</Button></Link>
         </div>
       </div>
     );
@@ -72,58 +56,25 @@ export default function ForgotPasswordPage() {
             <Clapperboard className="h-7 w-7" />
           </div>
           <h1 className="text-2xl font-bold">Reset your password</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Enter your email and we&apos;ll send you a reset link.
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">Enter your email and we&apos;ll send a reset link</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-              {error}
-            </div>
+            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
           )}
-
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="flex h-11 w-full rounded-lg border border-border bg-secondary/50 px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-            />
+            <label htmlFor="email" className="text-sm font-medium">Email</label>
+            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className="flex h-11 w-full rounded-lg border border-border bg-secondary/50 px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all" />
           </div>
-
-          <Button
-            type="submit"
-            variant="default"
-            size="lg"
-            className="w-full h-12"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Sending...
-              </>
-            ) : (
-              "Send Reset Link"
-            )}
+          <Button type="submit" variant="default" size="lg" className="w-full h-12" disabled={loading}>
+            {loading ? (<><Loader2 className="h-4 w-4 animate-spin mr-2" />Sending...</>) : "Send Reset Link"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          <Link
-            href="/login"
-            className="font-medium text-accent hover:text-accent/80 transition-colors"
-          >
-            Back to Sign In
-          </Link>
+          Remember your password?{" "}
+          <Link href="/login" className="font-medium text-accent hover:text-accent/80 transition-colors">Sign in</Link>
         </p>
       </div>
     </div>

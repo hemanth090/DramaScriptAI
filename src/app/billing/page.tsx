@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,7 @@ function statusBadge(status: string) {
 }
 
 export default function BillingPage() {
-  const { status: sessionStatus } = useSession();
+  const { status: sessionStatus } = useAuth();
   const router = useRouter();
 
   const [data, setData] = useState<BillingData | null>(null);

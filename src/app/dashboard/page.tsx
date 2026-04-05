@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ interface DashboardData {
 const PAGE_SIZE = 10;
 
 export default function DashboardPage() {
-  const { status } = useSession();
+  const { status } = useAuth();
   const router = useRouter();
 
   const [data, setData] = useState<DashboardData | null>(null);

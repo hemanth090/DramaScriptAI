@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
@@ -68,7 +68,9 @@ const proPlan = {
 };
 
 export default function PricingPage() {
-  const { data: session, status: sessionStatus, update: updateSession } = useSession();
+  const { user: authUser, status: sessionStatus } = useAuth();
+  // Build a session-like object for compatibility
+  const session = authUser ? { user: { id: authUser.id, name: authUser.user_metadata?.name, email: authUser.email } } : null;
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -81,7 +83,7 @@ export default function PricingPage() {
   } | null>(null);
   const router = useRouter();
 
-  const isPro = session?.user?.isPro ?? false;
+  const isPro = subStatus?.isActive ?? false;
   const isCancelled = subStatus?.cancelledAt != null;
 
   // Fetch subscription details to know if cancelled
@@ -104,7 +106,7 @@ export default function PricingPage() {
   }, []);
 
   useEffect(() => {
-    if (sessionStatus === "authenticated" && isPro) {
+    if (sessionStatus === "authenticated") {
       const load = async () => { await fetchSubStatus(); };
       load();
     }
@@ -163,7 +165,6 @@ export default function PricingPage() {
             const verifyData = await verifyRes.json();
 
             if (verifyRes.ok && verifyData.success) {
-              await updateSession();
               setSuccess(true);
               setTimeout(() => router.push("/generate"), 3000);
             } else {

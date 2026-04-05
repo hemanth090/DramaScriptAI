@@ -3,70 +3,22 @@ import {
   text,
   timestamp,
   integer,
-  primaryKey,
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// ─── NextAuth.js required tables ───
+// ─── Users (synced from Supabase Auth) ───
 
 export const users = pgTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: text("id").primaryKey(), // Supabase auth.users UUID
   name: text("name"),
   email: text("email").notNull().unique(),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
-  image: text("image"),
-  hashedPassword: text("hashed_password"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()
     .notNull()
     .$onUpdateFn(() => new Date()),
 });
-
-export const accounts = pgTable(
-  "accounts",
-  {
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("provider_account_id").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (table) => [
-    primaryKey({ columns: [table.provider, table.providerAccountId] }),
-  ]
-);
-
-export const sessions = pgTable("sessions", {
-  sessionToken: text("session_token").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-});
-
-export const verificationTokens = pgTable(
-  "verification_tokens",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (table) => [
-    primaryKey({ columns: [table.identifier, table.token] }),
-  ]
-);
 
 // ─── Application tables ───
 
@@ -152,19 +104,9 @@ export const payments = pgTable(
 // ─── Relations ───
 
 export const usersRelations = relations(users, ({ many, one }) => ({
-  accounts: many(accounts),
-  sessions: many(sessions),
   generations: many(generations),
   payments: many(payments),
   subscription: one(subscriptions),
-}));
-
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
 export const generationsRelations = relations(generations, ({ one }) => ({

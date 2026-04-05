@@ -1,115 +1,43 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/drizzle";
-import {
-  users,
-  accounts,
-  sessions,
-  verificationTokens,
-  subscriptions,
-} from "@/lib/drizzle/schema";
-import { eq, and, gt } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import { users } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-      isPro: boolean;
-    };
-  }
-}
+// Server-side auth helper — use in API routes and server components
+export async function auth(): Promise<{
+  user: { id: string; email: string; name?: string } | null;
+}> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-declare module "next-auth" {
-  interface JWT {
-    userId?: string;
-    isPro?: boolean;
-  }
-}
+  if (!user || !user.email) return { user: null };
 
-async function getProStatus(userId: string): Promise<boolean> {
+  // Ensure user exists in our app database (auto-create on first API call)
   try {
-    const [sub] = await db
-      .select()
-      .from(subscriptions)
-      .where(
-        and(
-          eq(subscriptions.userId, userId),
-          eq(subscriptions.status, "active"),
-          gt(subscriptions.expiresAt, new Date())
-        )
-      )
+    const [existing] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, user.id))
       .limit(1);
-    return !!sub;
+
+    if (!existing) {
+      await db.insert(users).values({
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name || user.email.split("@")[0],
+      });
+    }
   } catch {
-    return false;
+    // User might already exist (race condition) — safe to ignore
   }
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.name || user.email.split("@")[0],
+    },
+  };
 }
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
-  providers: [
-    Credentials({
-      name: "credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-
-        const email = (credentials.email as string).toLowerCase().trim();
-        const password = credentials.password as string;
-
-        const [user] = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, email))
-          .limit(1);
-
-        if (!user || !user.hashedPassword) return null;
-        if (!user.emailVerified) return null;
-
-        const valid = await bcrypt.compare(password, user.hashedPassword);
-        if (!valid) return null;
-
-        return { id: user.id, name: user.name, email: user.email, image: user.image };
-      },
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 24 * 60 * 60, // 1 day — keeps isPro status fresh
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id;
-      }
-      // Always revalidate isPro on every token refresh (Redis-cached, <5ms)
-      if (token.userId) {
-        token.isPro = await getProStatus(token.userId as string);
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.userId) {
-        session.user.id = token.userId as string;
-        session.user.isPro = (token.isPro as boolean) ?? false;
-      }
-      return session;
-    },
-  },
-});

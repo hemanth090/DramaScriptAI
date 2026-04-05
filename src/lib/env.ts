@@ -13,10 +13,6 @@ function optional(name: string, fallback: string): string {
 }
 
 export const env = {
-  // ─── Auth (NextAuth) ───
-  get AUTH_SECRET(): string {
-    return required("AUTH_SECRET");
-  },
   // ─── Database ───
   get DATABASE_URL(): string {
     return required("DATABASE_URL");
