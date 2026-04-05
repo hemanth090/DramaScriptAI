@@ -35,8 +35,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(callbackUrl);
-    router.refresh();
+    // Hard redirect to ensure session cookie is picked up
+    window.location.href = callbackUrl;
   }
 
   return (
