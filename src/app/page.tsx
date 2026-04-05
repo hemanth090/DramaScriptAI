@@ -60,7 +60,7 @@ const features = [
   {
     icon: Zap,
     title: "Instant Generation",
-    desc: "Full 8-episode script in under 30 seconds. 5 free scripts per day to get you started.",
+    desc: "Full multi-episode script in under 30 seconds. 5 free scripts per day to get you started.",
   },
 ];
 
@@ -122,7 +122,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
-                Generate complete <strong className="text-foreground font-medium">8-episode</strong> short drama
+                Generate complete <strong className="text-foreground font-medium">multi-episode</strong> short drama
                 scripts with emotional hooks, cliffhangers, and zero-budget filming guides
                 for <strong className="text-foreground font-medium">Reels, TikTok & YouTube Shorts</strong>.
               </p>

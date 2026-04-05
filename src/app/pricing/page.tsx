@@ -383,7 +383,7 @@ export default function PricingPage() {
             {[
               {
                 q: "What do I get with the free plan?",
-                a: "3 complete 8-episode drama scripts per day. Each script includes dialogue, scene descriptions, cliffhangers, filming guides, and creator notes. Copy and PDF export included.",
+                a: "5 drama scripts per day. Choose 4 to 12 episodes per script across 8 genre categories. Each script includes dialogue, scene directions, cliffhangers, and a production bible. Copy to clipboard and PDF export included.",
               },
               {
                 q: "How does the Pro plan work?",
