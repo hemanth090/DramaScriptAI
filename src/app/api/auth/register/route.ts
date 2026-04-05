@@ -84,9 +84,10 @@ export async function POST(request: Request) {
       message: "Account created!",
     });
   } catch (error) {
-    console.error("Registration error:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Registration error:", message, error);
     return Response.json(
-      { error: "Registration failed. Please try again." },
+      { error: `Registration failed: ${message}` },
       { status: 500 }
     );
   }
