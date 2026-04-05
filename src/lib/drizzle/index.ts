@@ -7,5 +7,5 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL environment variable is not set");
 }
 
-const sql = neon(databaseUrl);
+const sql = neon(databaseUrl, { fullResults: false });
 export const db = drizzle(sql, { schema });
