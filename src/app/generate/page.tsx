@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,6 @@ const categories = [
 
 function GenerateContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   useAuth(); // ensures auth state is tracked
   const initialPrompt = searchParams.get("prompt") || "";
 
@@ -579,14 +578,6 @@ function GenerateContent() {
                             {used}/{limit}{isPro ? "/mo" : " today"}
                           </span>
                         </div>
-                        {!isPro && (
-                          <button
-                            onClick={() => router.push("/pricing")}
-                            className="text-xs text-accent hover:underline cursor-pointer"
-                          >
-                            Upgrade
-                          </button>
-                        )}
                       </div>
                     );
                   })()}
@@ -658,17 +649,6 @@ function GenerateContent() {
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-destructive font-medium">{error}</p>
-                  {remaining === 0 && !isPro && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => router.push("/pricing")}
-                    >
-                      <Crown className="h-3 w-3 mr-1" />
-                      Upgrade to Pro — ₹499/month
-                    </Button>
-                  )}
                 </div>
               </div>
             )}

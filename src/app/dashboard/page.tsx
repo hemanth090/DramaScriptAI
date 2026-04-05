@@ -185,7 +185,7 @@ export default function DashboardPage() {
               )}
               {!data.isPro && (
                 <p className="text-sm text-muted-foreground">
-                  5 free scripts per day. Upgrade for more access.
+                  5 free scripts per day.
                 </p>
               )}
             </div>
@@ -196,14 +196,6 @@ export default function DashboardPage() {
                   Generate
                 </Button>
               </Link>
-              {!data.isPro && (
-                <Link href="/pricing">
-                  <Button variant="outline" size="sm">
-                    <Crown className="h-3.5 w-3.5" />
-                    Upgrade
-                  </Button>
-                </Link>
-              )}
             </div>
           </div>
         </div>
