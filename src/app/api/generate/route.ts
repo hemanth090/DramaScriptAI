@@ -44,8 +44,8 @@ export async function POST(request: Request) {
       return Response.json(
         {
           error: isPro
-            ? "Monthly limit of 100 scripts reached. Your limit resets on the 1st of next month."
-            : "Daily free limit reached! Upgrade to Pro for 100 scripts per month.",
+            ? "Monthly limit of 50 scripts reached. Your limit resets on the 1st of next month."
+            : "Daily free limit reached! Upgrade to Pro for 50 scripts per month.",
           remaining: 0,
           limit,
           isPro,

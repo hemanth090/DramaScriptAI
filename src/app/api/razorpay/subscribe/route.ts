@@ -23,7 +23,7 @@ async function getOrCreatePlan(razorpay: InstanceType<typeof Razorpay>): Promise
         name: "DramaScript.ai Pro",
         amount: 49900, // ₹499
         currency: "INR",
-        description: "100 drama scripts per month",
+        description: "50 drama scripts per month",
       },
     });
     cachedPlanId = plan.id;

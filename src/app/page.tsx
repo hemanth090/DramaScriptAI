@@ -60,7 +60,7 @@ const features = [
   {
     icon: Zap,
     title: "Instant Generation",
-    desc: "Full 8-episode script in under 30 seconds. 3 free scripts per day to get you started.",
+    desc: "Full 8-episode script in under 30 seconds. 5 free scripts per day to get you started.",
   },
 ];
 
@@ -271,7 +271,7 @@ export default function HomePage() {
               Ready to Create Your <span className="text-accent">Next Viral Series</span>?
             </h2>
             <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-              Start with 3 free scripts per day. Upgrade to Pro for 100 scripts per month.
+              Start with 5 free scripts per day. Upgrade to Pro for 50 scripts per month.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button

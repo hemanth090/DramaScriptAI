@@ -135,7 +135,7 @@ export async function sendWelcomeEmail(
           <h1 style="color: #a855f7; font-size: 24px;">Welcome, ${name}!</h1>
           <p>You're all set to create viral drama scripts for Reels, TikTok & YouTube Shorts.</p>
           <div style="background: #f4f4f5; border-radius: 12px; padding: 16px; margin: 16px 0;">
-            <p style="margin: 4px 0;"><strong>Free Plan:</strong> 3 scripts per day</p>
+            <p style="margin: 4px 0;"><strong>Free Plan:</strong> 5 scripts per day</p>
             <p style="margin: 4px 0;"><strong>Includes:</strong> 8-episode arcs, cliffhangers, filming guides</p>
           </div>
           <a href="https://dramascript.ai/generate" style="display: inline-block; background: #a855f7; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 12px;">Generate Your First Script</a>

@@ -38,7 +38,7 @@ const freePlan = {
   period: "forever",
   description: "Perfect for trying out DramaScript.ai",
   features: [
-    "3 scripts per day",
+    "5 scripts per day",
     "8-episode story arcs",
     "Universal dialogue",
     "Copy & PDF export",
@@ -51,9 +51,9 @@ const proPlan = {
   name: "Pro",
   price: "\u20B9499",
   period: "/month",
-  description: "100 scripts/month for serious creators",
+  description: "50 scripts/month for serious creators",
   features: [
-    "100 scripts per month",
+    "50 scripts per month",
     "8-episode story arcs",
     "Universal dialogue",
     "Copy & PDF export",
@@ -208,7 +208,7 @@ export default function PricingPage() {
           </div>
           <h1 className="text-3xl font-bold">Welcome to Pro!</h1>
           <p className="text-muted-foreground text-lg">
-            Your Pro access is now active with 100 scripts/month.
+            Your Pro access is now active with 50 scripts/month.
           </p>
           <Badge variant="default" className="text-sm px-4 py-1.5">
             <Crown className="h-4 w-4 mr-1.5" />
@@ -238,7 +238,7 @@ export default function PricingPage() {
             Choose Your <span className="text-accent">Creator Plan</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Start free with 3 scripts/day. Go Pro for 100 scripts/month at just {"\u20B9"}499/month.
+            Start free with 5 scripts/day. Go Pro for 50 scripts/month at just {"\u20B9"}499/month.
           </p>
         </div>
 
@@ -400,7 +400,7 @@ export default function PricingPage() {
               },
               {
                 q: "How does the Pro plan work?",
-                a: "Pay \u20B9499/month via Razorpay (UPI, cards, net banking). Instantly unlocks 100 scripts per month. Auto-renews monthly. Cancel anytime from your billing page.",
+                a: "Pay \u20B9499/month via Razorpay (UPI, cards, net banking). Instantly unlocks 50 scripts per month. Auto-renews monthly. Cancel anytime from your billing page.",
               },
               {
                 q: "How do I cancel?",

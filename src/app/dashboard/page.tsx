@@ -185,7 +185,7 @@ export default function DashboardPage() {
               )}
               {!data.isPro && (
                 <p className="text-sm text-muted-foreground">
-                  3 free scripts per day. Upgrade for unlimited access.
+                  5 free scripts per day. Upgrade for more access.
                 </p>
               )}
             </div>
@@ -216,7 +216,7 @@ export default function DashboardPage() {
           </div>
           <div className="rounded-xl border border-border bg-card/50 p-4 text-center">
             <p className="text-2xl font-bold text-accent">
-              {data.isPro ? "100/month" : "3/day"}
+              {data.isPro ? "50/month" : "5/day"}
             </p>
             <p className="text-xs text-muted-foreground">Generation Limit</p>
           </div>

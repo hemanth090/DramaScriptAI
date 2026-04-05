@@ -2,8 +2,8 @@ import { db } from "@/lib/drizzle";
 import { generations } from "@/lib/drizzle/schema";
 import { eq, and, gte, count } from "drizzle-orm";
 
-const FREE_DAILY_LIMIT = 3;
-const PRO_MONTHLY_LIMIT = 100;
+const FREE_DAILY_LIMIT = 5;
+const PRO_MONTHLY_LIMIT = 50;
 
 // ─── Check rate limit (read-only, does NOT consume a credit) ───
 // Credits are only "consumed" when a generation is successfully inserted into the DB.
@@ -13,7 +13,7 @@ export async function checkRateLimit(
   isPro: boolean
 ): Promise<{ allowed: boolean; remaining: number; limit: number }> {
   if (isPro) {
-    // Pro: 100 scripts per calendar month
+    // Pro: 50 scripts per calendar month
     try {
       const monthStart = new Date();
       monthStart.setDate(1);
@@ -38,7 +38,7 @@ export async function checkRateLimit(
     }
   }
 
-  // Free: 3 scripts per rolling 24 hours (counted from generations table)
+  // Free: 5 scripts per rolling 24 hours (counted from generations table)
   try {
     const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const [result] = await db
