@@ -14,6 +14,7 @@ const publicPaths = [
   "/api/auth",
   "/api/razorpay/webhook",
   "/api/stats",
+  "/api/debug-db",
 ];
 
 function isPublicPath(pathname: string): boolean {
