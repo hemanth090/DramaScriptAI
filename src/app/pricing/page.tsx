@@ -39,10 +39,12 @@ const freePlan = {
   description: "Get started with 5 scripts a day",
   features: [
     "5 scripts per day",
-    "Up to 12 episodes per script",
-    "Copy & PDF export",
+    "4 to 12 episode arcs",
+    "Copy to clipboard & PDF export",
+    "8 genre categories",
+    "Script history dashboard",
   ],
-  limitations: ["Daily limit resets every 24h"],
+  limitations: [],
 };
 
 const proPlan = {
