@@ -174,7 +174,7 @@ export default function BillingPage() {
             // No active subscription
             <div className="space-y-4">
               <p className="text-muted-foreground">
-                You&apos;re on the <strong className="text-foreground">Free plan</strong> — 3
+                You&apos;re on the <strong className="text-foreground">Free plan</strong> — 5
                 scripts per day.
               </p>
               <Link href="/pricing">
