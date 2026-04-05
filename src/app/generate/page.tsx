@@ -228,8 +228,8 @@ function GenerateContent() {
       const lines = section.split("\n").map(l => l.trim()).filter(Boolean);
       if (!lines.length) continue;
 
-      // Episode block
-      const epMatch = lines[0].match(/^##\s*Episode\s*(\d+)\s*:\s*(.*)/i);
+      // Episode block — match "## Episode 1:", "## EP1:", "## EP 1:", "## EP[1]:"
+      const epMatch = lines[0].match(/^##\s*(?:Episode|EP)\s*\[?(\d+)\]?\s*:\s*(.*)/i);
       if (epMatch) {
         const ep: Block = { type: "episode", number: parseInt(epMatch[1]), title: epMatch[2], meta: {}, dialogue: [] };
         for (let j = 1; j < lines.length; j++) {
@@ -265,8 +265,8 @@ function GenerateContent() {
         continue;
       }
 
-      // Header block (has SERIES TITLE or GENRE or TAGLINE)
-      const hasHeaderField = lines.some(l => /^(SERIES TITLE|GENRE|TAGLINE|LOGLINE|TOTAL EPISODES)/i.test(l));
+      // Header block (has TITLE or GENRE or LOGLINE)
+      const hasHeaderField = lines.some(l => /^(SERIES TITLE|TITLE|GENRE|TAGLINE|LOGLINE|TOTAL EPISODES|SERIES OVERVIEW)/i.test(l));
       if (hasHeaderField) {
         const fields: Record<string, string> = {};
         for (const l of lines) {
@@ -301,7 +301,7 @@ function GenerateContent() {
 
   // ── Series Header ──
   const ScriptHeader = ({ fields }: { fields: Record<string, string> }) => {
-    const title = fields["SERIES TITLE"] || "";
+    const title = fields["SERIES TITLE"] || fields["TITLE"] || "";
     const tagline = fields["TAGLINE"] || "";
     const genre = fields["GENRE"] || "";
     const eps = fields["TOTAL EPISODES"] || "";
