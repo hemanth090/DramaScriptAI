@@ -38,7 +38,7 @@ export default function TermsPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-foreground">3. Free & Pro Plans</h2>
           <p>
-            <strong className="text-foreground">Free Plan:</strong> 3 script generations per day. No account
+            <strong className="text-foreground">Free Plan:</strong> 5 script generations per day. Account
             required. Subject to rate limiting.
           </p>
           <p>

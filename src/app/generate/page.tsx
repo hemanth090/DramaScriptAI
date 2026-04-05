@@ -58,7 +58,7 @@ function GenerateContent() {
   const [copied, setCopied] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
-  const [limit, setLimit] = useState<number>(3);
+  const [limit, setLimit] = useState<number>(5);
   const [isPro, setIsPro] = useState(false);
   const [generationId, setGenerationId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
