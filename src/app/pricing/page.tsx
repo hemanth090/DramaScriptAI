@@ -36,33 +36,24 @@ const freePlan = {
   name: "Free",
   price: "\u20B90",
   period: "forever",
-  description: "Perfect for trying out DramaScript.ai",
+  description: "Get started with 5 scripts a day",
   features: [
     "5 scripts per day",
-    "8-episode story arcs",
-    "Universal dialogue",
+    "Up to 12 episodes per script",
     "Copy & PDF export",
-    "All drama genres",
   ],
-  limitations: ["Limited daily usage", "No priority generation"],
+  limitations: ["Daily limit resets every 24h"],
 };
 
 const proPlan = {
   name: "Pro",
   price: "\u20B9499",
   period: "/month",
-  description: "50 scripts/month for serious creators",
+  description: "For creators who ship consistently",
   features: [
     "50 scripts per month",
-    "8-episode story arcs",
-    "Universal dialogue",
-    "Copy & PDF export",
-    "All drama genres",
     "Priority generation speed",
-    "Script history & dashboard",
-    "Monthly auto-renewal",
     "Cancel anytime",
-    "Email support",
   ],
   limitations: [],
 };
