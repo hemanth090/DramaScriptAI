@@ -355,33 +355,23 @@ export default function PricingPage() {
                   </Link>
                 </div>
               ) : (
-                <Button
-                  variant="default"
-                  className="w-full"
-                  size="lg"
-                  onClick={handleSubscribe}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Crown className="h-4 w-4" />
-                      {session ? "Subscribe \u2014 \u20B9499/month" : "Sign in & Subscribe \u2014 \u20B9499/month"}
-                    </>
-                  )}
-                </Button>
+                <div className="w-full space-y-3">
+                  <Button
+                    variant="default"
+                    className="w-full"
+                    size="lg"
+                    disabled
+                  >
+                    <Crown className="h-4 w-4" />
+                    Coming Soon
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Pro plan launching soon. Stay tuned!
+                  </p>
+                </div>
               )}
               {error && (
                 <p className="text-xs text-destructive text-center">{error}</p>
-              )}
-              {!isPro && (
-                <p className="text-xs text-muted-foreground text-center">
-                  Secure payment via Razorpay. Auto-renews monthly. Cancel anytime from billing.
-                </p>
               )}
             </CardFooter>
           </Card>
