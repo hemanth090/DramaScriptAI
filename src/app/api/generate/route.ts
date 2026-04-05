@@ -82,9 +82,10 @@ export async function POST(request: Request) {
       isPro,
     });
   } catch (error) {
-    console.error("Generate error:", error instanceof Error ? error.message : "Unknown error");
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Generate error:", message);
     return Response.json(
-      { error: "Something went wrong. Please try again." },
+      { error: `Generation failed: ${message}` },
       { status: 500 }
     );
   }
