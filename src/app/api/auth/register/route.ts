@@ -32,7 +32,9 @@ export async function POST(request: Request) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const emailEnabled = isEmailConfigured();
+    // Email verification disabled until a custom domain is verified on Resend
+    // Set ENABLE_EMAIL_VERIFICATION=true to re-enable
+    const emailEnabled = process.env.ENABLE_EMAIL_VERIFICATION === "true" && isEmailConfigured();
 
     // Check if user already exists
     const [existing] = await db
